@@ -1,15 +1,15 @@
-package com.t2t.examples.service;
+package com.t2t.examples.dao;
 
 import com.t2t.examples.model.User;
 
 /**
  * 最简单的调用方法
  */
-public interface UserService {
+public interface UserMapper {
 
-    public User get();
+    public User get(int id);
 
-    public int add(User user);
+    public int insert(User user);
 
     public int modify(User user);
 
