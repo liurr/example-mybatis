@@ -1,4 +1,4 @@
-package com.t2t.examples;
+package com.t2t.examples.model;
 
 public class User {
     private int id;
