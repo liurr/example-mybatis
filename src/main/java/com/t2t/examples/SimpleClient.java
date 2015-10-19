@@ -1,5 +1,6 @@
 package com.t2t.examples;
 
+import com.t2t.examples.model.User;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * 最简单的调用方法
  */
-public class Simple {
+public class SimpleClient {
     public static String resource = "mybatis.xml";
 
     public static void main(String[] args) throws IOException {
@@ -44,7 +45,7 @@ public class Simple {
 
     //使用类加载器加载mybatis的配置文件（它也加载关联的映射文件）
     public static SqlSessionFactory getFactory2() throws IOException {
-        InputStream is = Simple.class.getClassLoader().getResourceAsStream(resource);
+        InputStream is = SimpleClient.class.getClassLoader().getResourceAsStream(resource);
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
         return sessionFactory;
     }
