@@ -1,20 +1,23 @@
-关于mybatis简单示列
+关于MyBatis示列
 
-描述：关于mybatis的各种语法示例。
+描述：关于MyBatis的各种语法示例。
 
-1. 2015-10-17(周六)，构建example-mybatis工程.
+示例用法
+1) UserMapperTest.java中具备相关测试方法.
+2) 实际代码和测试代码的包结构是一样的，只是在原有的类上加入Test后缀予以区分.
+3) 所有测试类均基础BaseTest.
 
+修改记录
+1. 2015-10-17(周六)，构建example-MyBatis工程.
+2. 2015-10-19(周一)，添加增删改查示例.
+3. 2015-10-20(周二)，添加MyBatis的动态SQL详解示例及说明.
+
+------------------------------------------------------------------
 MyBatis的动态SQL详解
 
 MyBatis的动态SQL是基于OGNL表达式的，它可以帮助我们方便的在SQL语句中实现某些逻辑。
-MyBatis中用于实现动态SQL的元素主要有：
 
-if
-choose（when\otherwise）
-trim
-where
-set
-foreach
+MyBatis中用于实现动态SQL的元素主要有：if、choose（when\otherwise）、trim、where、set、foreach
 
 1. if就是简单的条件判断，利用if语句我们可以实现某些简单的条件选择。
 以下语句的意思非常简单，如果你提供了name参数，那么就要满足name=#{name}，同样如果你提供了sex和age的时候，它们也需要满足相应的条件，之后就是返回满足这些条件的所有User，
@@ -41,11 +44,11 @@ Xml代码
 <select id="dynamicChooseTest" parameterType="User" resultType="User">
     select * from USERS where 1 = 1
     <choose>
-        <when test="name != null">
-             name = #{name}
-        </when>
         <when test="sex != null">
             and sex = #{sex}
+        </when>
+        <when test="name != null">
+            and name = #{name}
         </when>
         <otherwise>
             and age > 0
@@ -98,7 +101,7 @@ Xml代码
 5.1 set元素主要是用在更新操作的时候，它的主要功能和where元素是差不多的。
 主要是在包含的语句前输出一个set，然后如果包含的语句是以逗号结束的话将会把该逗号忽略，如果set包含的内容为空的话则会出错。
 有了set元素我们就可以动态的更新那些修改了的字段。
-Xml代码(待验证)
+Xml代码
 <update id="dynamicSetTest1" parameterType="User">
     update USERS
     <set>
@@ -106,15 +109,16 @@ Xml代码(待验证)
             name = #{name},
         </if>
         <if test="sex != null">
-            or sex = #{sex},
+            sex = #{sex},
         </if>
         <if test="age!= 0">
-            and age = #{age},
+            age = #{age},
         </if>
     </set>
     where id = #{id}
 </update>
 5.2 同上
+Xml代码
 <update id="dynamicSetTest2" parameterType="User">
     update USERS
     <trim prefix="set" suffixOverrides=",">
@@ -122,103 +126,44 @@ Xml代码(待验证)
             name = #{name},
         </if>
         <if test="sex != null">
-            or sex = #{sex},
+             sex = #{sex},
         </if>
         <if test="age!= 0">
-            and age = #{age},
+             age = #{age},
         </if>
     </trim>
     where id = #{id}
 </update>
 上述示例代码中，如果set中一个条件都不满足，即set中包含的内容为空的时候就会报错。
 
------------------------------
-foreach的主要用在构建in条件中，它可以在SQL语句中进行迭代一个集合。foreach元素的属性主要有item，index，collection，open，separator，close。item表示集合中每一个元素进行迭代时的别名，index指定一个名字，用于表示在迭代过程中，每次迭代到的位置，open表示该语句以什么开始，separator表示在每次进行迭代之间以什么符号作为分隔符，close表示以什么结束，在使用foreach的时候最关键的也是最容易出错的就是collection属性，该属性是必须指定的，但是在不同情况下，该属性的值是不一样的，主要有一下3种情况：
-如果传入的是单参数且参数类型是一个List的时候，collection属性值为list
-如果传入的是单参数且参数类型是一个array数组的时候，collection的属性值为array
-如果传入的参数是多个的时候，我们就需要把它们封装成一个Map了，当然单参数也可以封装成map，实际上如果你在传入参数的时候，在MyBatis里面也是会把它封装成一个Map的，map的key就是参数名，所以这个时候collection属性值就是传入的List或array对象在自己封装的map里面的key
-下面分别来看看上述三种情况的示例代码：
-1.单参数List的类型：
+6.1 单参数List的类型
 Xml代码
-<select id="dynamicForeachTest" resultType="Blog">
-    select * from t_blog where id in
+<select id="dynamicForeach1Test" resultType="User">
+    select * from Users where id in
     <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
         #{item}
     </foreach>
-</select>
- 上述collection的值为list，对应的Mapper是这样的
-Java代码
-public List<Blog> dynamicForeachTest(List<Integer> ids);
+</select
 
-Java代码
-@Test
-public void dynamicForeachTest() {
-    SqlSession session = Util.getSqlSessionFactory().openSession();
-    BlogMapper blogMapper = session.getMapper(BlogMapper.class);
-    List<Integer> ids = new ArrayList<Integer>();
-    ids.add(1);
-    ids.add(3);
-    ids.add(6);
-    List<Blog> blogs = blogMapper.dynamicForeachTest(ids);
-    for (Blog blog : blogs)
-        System.out.println(blog);
-    session.close();
-}
-
-2.单参数array数组的类型：
+6.2 单参数array数组的类型
 Xml代码
-<select id="dynamicForeach2Test" resultType="Blog">
-    select * from t_blog where id in
-    <foreach collection="array" index="index" item="item" open="(" separator="," close=")">
-        #{item}
-    </foreach>
-</select>
-上述collection为array，对应的Mapper代码：
-Java代码
-public List<Blog> dynamicForeach2Test(int[] ids);
-对应的测试代码：
-Java代码
-@Test
-public void dynamicForeach2Test() {
-    SqlSession session = Util.getSqlSessionFactory().openSession();
-    BlogMapper blogMapper = session.getMapper(BlogMapper.class);
-    int[] ids = new int[] {1,3,6,9};
-    List<Blog> blogs = blogMapper.dynamicForeach2Test(ids);
-    for (Blog blog : blogs)
-        System.out.println(blog);
-    session.close();
-}
-
-3.自己把参数封装成Map的类型
-Xml代码
-<select id="dynamicForeach3Test" resultType="Blog">
-    select * from t_blog where title like "%"#{title}"%" and id in
+<select id="dynamicForeach3Test" resultType="User">
+    select * from Users where name like "%"#{name}"%" and id in
     <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
         #{item}
     </foreach>
 </select>
-上述collection的值为ids，是传入的参数Map的key，对应的Mapper代码：
-Java代码
-public List<Blog> dynamicForeach3Test(Map<String, Object> params);
-对应测试代码：
-Java代码
-@Test
-public void dynamicForeach3Test() {
-    SqlSession session = Util.getSqlSessionFactory().openSession();
-    BlogMapper blogMapper = session.getMapper(BlogMapper.class);
-    final List<Integer> ids = new ArrayList<Integer>();
-    ids.add(1);
-    ids.add(2);
-    ids.add(3);
-    ids.add(6);
-    ids.add(7);
-    ids.add(9);
-    Map<String, Object> params = new HashMap<String, Object>();
-    params.put("ids", ids);
-    params.put("title", "中国");
-    List<Blog> blogs = blogMapper.dynamicForeach3Test(params);
-    for (Blog blog : blogs){
-        System.out.println(blog);
-    }
-    session.close();
-}
+
+6.3 自己把参数封装成Map的类型
+Xml代码
+<select id="dynamicForeach3Test" resultType="User">
+    select * from Users where title like "%"#{title}"%" and id in
+    <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+</select>
+
+foreach的主要用在构建in条件中，它可以在SQL语句中进行迭代一个集合。foreach元素的属性主要有item，index，collection，open，separator，close。item表示集合中每一个元素进行迭代时的别名，index指定一个名字，用于表示在迭代过程中，每次迭代到的位置，open表示该语句以什么开始，separator表示在每次进行迭代之间以什么符号作为分隔符，close表示以什么结束，在使用foreach的时候最关键的也是最容易出错的就是collection属性，该属性是必须指定的，但是在不同情况下，该属性的值是不一样的，主要有一下3种情况：
+如果传入的是单参数且参数类型是一个List的时候，collection属性值为list
+如果传入的是单参数且参数类型是一个array数组的时候，collection的属性值为array
+如果传入的参数是多个的时候，我们就需要把它们封装成一个Map了，当然单参数也可以封装成map，实际上如果你在传入参数的时候，在MyBatis里面也是会把它封装成一个Map的，map的key就是参数名，所以这个时候collection属性值就是传入的List或array对象在自己封装的map里面的key
