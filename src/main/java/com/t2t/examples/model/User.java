@@ -3,6 +3,7 @@ package com.t2t.examples.model;
 public class User {
     private int id;
     private String name;
+    private String sex;
     private int age;
 
     public int getId() {
@@ -27,5 +28,13 @@ public class User {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 }

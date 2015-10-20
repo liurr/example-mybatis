@@ -19,7 +19,7 @@ public class BaseTest {
 
     @Before
     public void before() {
-        System.out.println("方法开始:");
+        System.out.println("方法开始");
         st = System.currentTimeMillis();
     }
 
@@ -31,8 +31,13 @@ public class BaseTest {
 
     public static String RESOURCE = "mybatis.xml";
 
-    public static SqlSession getSqlSession() throws IOException {
-        SqlSessionFactory sessionFactory = getFactory();
+    public static SqlSession getSqlSession()  {
+        SqlSessionFactory sessionFactory = null;
+        try {
+            sessionFactory = getFactory();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         SqlSession session = sessionFactory.openSession();
         return session;
     }
