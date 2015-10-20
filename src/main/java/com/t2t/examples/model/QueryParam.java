@@ -2,6 +2,9 @@ package com.t2t.examples.model;
 
 import java.util.Map;
 
+/**
+ * 待定
+ */
 public interface QueryParam extends Map<String, Object> {
 
     /**
