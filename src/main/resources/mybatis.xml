@@ -2,8 +2,12 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-    <environments default="development">
-        <environment id="development">
+    <typeAliases>
+        <typeAlias type="com.t2t.examples.model.User" alias="User"></typeAlias>
+    </typeAliases>
+
+    <environments default="local">
+        <environment id="local">
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.jdbc.Driver"/>
@@ -17,4 +21,5 @@
     <mappers>
         <mapper resource="mapping/userMapper.xml"/>
     </mappers>
+
 </configuration>
