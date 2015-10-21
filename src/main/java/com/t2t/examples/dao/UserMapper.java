@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * MyBatis的动态SQL详解
+ * MyBatis的动态SQL详解.
  */
 public interface UserMapper {
 
