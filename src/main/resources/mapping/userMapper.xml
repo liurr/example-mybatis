@@ -6,7 +6,7 @@
 
 
     <!--1. if就是简单的条件判断，利用if语句我们可以实现某些简单的条件选择。-->
-    <select id="dynamicIfTest" parameterType="User" resultType="User">
+    <select id="dynamicIfTest" parameterType="user" resultType="user">
         select * from USERS where 1 = 1
         <if test="name != null">
             and name = #{name}
@@ -19,7 +19,7 @@
         </if>
     </select>
     <!--2. choose元素的作用就相当于JAVA中的switch语句，基本上跟JSTL中的choose的作用和用法是一样的，通常都是与when和otherwise搭配的。-->
-    <select id="dynamicChooseTest" parameterType="User" resultType="User">
+    <select id="dynamicChooseTest" parameterType="user" resultType="user">
         select * from USERS where 1 = 1
         <choose>
             <when test="sex != null">
@@ -34,7 +34,7 @@
         </choose>
     </select>
     <!--3. where语句的作用主要是简化SQL语句中where中的条件判断的。-->
-    <select id="dynamicWhereTest" parameterType="User" resultType="User">
+    <select id="dynamicWhereTest" parameterType="user" resultType="user">
         select * from USERS
         <where>
             <if test="name != null">
@@ -49,7 +49,7 @@
         </where>
     </select>
     <!--4. trim元素的主要功能是可以在自己包含的内容前加上某些前缀，也可以在其后加上某些后缀，与之对应的属性是prefix和suffix；-->
-    <select id="dynamicTrimTest" parameterType="User" resultType="User">
+    <select id="dynamicTrimTest" parameterType="user" resultType="user">
         select * from USERS
         <trim prefix="where" prefixOverrides="and | or">
             <if test="name != null">
@@ -64,7 +64,7 @@
         </trim>
     </select>
     <!-- 5.1 set元素主要是用在更新操作的时候，它的主要功能和where元素其实是差不多的。-->
-    <update id="dynamicSetTest1" parameterType="User">
+    <update id="dynamicSetTest1" parameterType="user">
         update USERS
         <set>
             <if test="name != null">
@@ -80,7 +80,7 @@
         where id = #{id}
     </update>
     <!--5.2 同上 -->
-    <update id="dynamicSetTest2" parameterType="User">
+    <update id="dynamicSetTest2" parameterType="user">
         update USERS
         <trim prefix="set" suffixOverrides=",">
             <if test="name != null">
@@ -96,28 +96,28 @@
         where id = #{id}
     </update>
     <!--6.1 单参数List的类型 -->
-    <select id="dynamicForeach1Test" resultType="User">
+    <select id="dynamicForeach1Test" resultType="user">
         select * from Users where id in
         <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
     </select>
     <!--6.2 单参数array数组的类型 -->
-    <select id="dynamicForeach2Test" resultType="User">
+    <select id="dynamicForeach2Test" resultType="user">
         select * from Users where id in
         <foreach collection="array" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
     </select>
     <!--6.3 自己把参数封装成Map的类型 -->
-    <select id="dynamicForeach3Test" resultType="User">
+    <select id="dynamicForeach3Test" resultType="user">
         select * from Users where name like "%"#{name}"%" and id in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
     </select>
     <!--****************** -->
-    <select id="query" resultType="User">
+    <select id="query" resultType="user">
         SELECT * FROM USERS
         <where>
             <if test="name!=null and name!='' ">
@@ -131,13 +131,13 @@
             </if>
         </where>
     </select>
-    <select id="get" parameterType="int" resultType="User">
+    <select id="get" parameterType="int" resultType="user">
         select * from users where id=#{id}
     </select>
-    <select id="list" resultType="User">
+    <select id="list" resultType="user">
         SELECT * FROM USERS
     </select>
-    <insert id="insert" parameterType="User">
+    <insert id="insert" parameterType="user">
         INSERT INTO users(NAME, age) VALUES(#{name}, #{age})
     </insert>
     <!--****************** -->
