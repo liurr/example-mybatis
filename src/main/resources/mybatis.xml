@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <typeAliases>
-        <typeAlias type="com.t2t.examples.model.User" alias="User"></typeAlias>
+        <typeAlias type="com.t2t.examples.model.User" alias="user"></typeAlias>
     </typeAliases>
 
     <environments default="local">
